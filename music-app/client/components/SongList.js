@@ -2,40 +2,58 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import fetchSongs from '../queries/fetchSongs';
 
-class SongList extends React.Component {
-  render() {
-    const { data } = this.props;
-    console.log('Data', data);
+const SongList = props => {
+  const onSongDelete = id => () =>
+    props.mutate({ variables: { id } }).then(() => props.data.refetch());
 
-    if (data.loading) {
-      return <div>Loading...</div>;
-    }
-    return (
-      <Container>
-        <h1>Song List</h1>
-        <ul>
-          {!!data.songs &&
-            data.songs.map(song => <li key={song.id}>{song.title}</li>)}
-        </ul>
-      </Container>
-    );
+  const { data } = props;
+  if (data.loading) {
+    return <div>Loading...</div>;
   }
-}
 
-const query = gql`
-  {
-    songs {
-      title
+  return (
+    <Container>
+      <h1>Song List</h1>
+      <div className="card">
+        <ul className="collection">
+          {!data.songs.length && (
+            <li className="collection-item">Add a song to get started</li>
+          )}
+          {!!data.songs &&
+            data.songs.map(({ id, title }) => (
+              <li className="collection-item" key={id}>
+                {title}
+                <i className="material-icons" onClick={onSongDelete(id)}>
+                  delete
+                </i>
+              </li>
+            ))}
+        </ul>
+      </div>
+      <div className="fixed-action-btn">
+        <Link className="btn-floating btn-large" to="songs/new">
+          <i className="material-icons">add</i>
+        </Link>
+      </div>
+    </Container>
+  );
+};
+
+const Container = styled.div`
+  background-color: whitesmoke;
+  height: 100vh;
+  padding: 25;
+`;
+
+const mutation = gql`
+  mutation DeleteSong($id: ID) {
+    deleteSong(id: $id) {
       id
     }
   }
 `;
 
-const Container = styled.div`
-  background-color: whitesmoke;
-  height: 100vh;
-  padding: 20;
-`;
-
-export default graphql(query)(SongList);
+export default graphql(mutation)(graphql(fetchSongs)(SongList));
