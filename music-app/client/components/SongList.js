@@ -4,10 +4,13 @@ import { graphql } from 'react-apollo';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import fetchSongs from '../queries/fetchSongs';
+import { Page, Icon } from '../styled';
 
 const SongList = props => {
-  const onSongDelete = id => () =>
+  const onSongDelete = id => e => {
+    console.log(e);
     props.mutate({ variables: { id } }).then(() => props.data.refetch());
+  };
 
   const { data } = props;
   if (data.loading) {
@@ -15,8 +18,8 @@ const SongList = props => {
   }
 
   return (
-    <Container>
-      <h1>Song List</h1>
+    <Page>
+      <h2>Song List</h2>
       <div className="card">
         <ul className="collection">
           {!data.songs.length && (
@@ -24,12 +27,12 @@ const SongList = props => {
           )}
           {!!data.songs &&
             data.songs.map(({ id, title }) => (
-              <li className="collection-item" key={id}>
-                {title}
-                <i className="material-icons" onClick={onSongDelete(id)}>
+              <Row className="collection-item" key={id}>
+                <SongTitle to={`/songs/${id}`}>{title}</SongTitle>
+                <Icon className="material-icons" onClick={onSongDelete(id)}>
                   delete
-                </i>
-              </li>
+                </Icon>
+              </Row>
             ))}
         </ul>
       </div>
@@ -38,14 +41,21 @@ const SongList = props => {
           <i className="material-icons">add</i>
         </Link>
       </div>
-    </Container>
+    </Page>
   );
 };
 
-const Container = styled.div`
-  background-color: whitesmoke;
-  height: 100vh;
-  padding: 25;
+const Row = styled.li`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const SongTitle = styled(Link)`
+  color: black;
+  cursor: pointer;
+  &:hover {
+    color: #26a69a;
+  }
 `;
 
 const mutation = gql`

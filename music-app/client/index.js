@@ -7,6 +7,7 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
 import SongList from './components/SongList';
 import CreateSong from './components/CreateSong';
+import SongDetail from './components/SongDetail';
 
 const cache = new InMemoryCache();
 const uri = 'http://localhost:4000/graphql';
@@ -20,6 +21,7 @@ const Root = () => {
         <Switch>
           <Route exact path="/" component={SongList} />
           <Route exact path="/songs/new" component={CreateSong} />
+          <Route exact path="/songs/:id" component={SongDetail} />
           <Redirect from="*" to="/" />
         </Switch>
       </HashRouter>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 import fetchSongs from '../queries/fetchSongs';
+import addSong from '../queries/addSong';
+import { Page } from '../styled';
 
 const CreateSong = props => {
   const [title, setTitle] = useState('');
@@ -24,32 +24,17 @@ const CreateSong = props => {
   };
   console.log('Props', props);
   return (
-    <Container>
+    <Page>
       <Link className="btn waves-effect waves-light" to="/">
         Back
       </Link>
       <h2>Create a New Song</h2>
       <form onSubmit={onSubmitForm}>
         <label>Song Title:</label>
-        <input type="text" onChange={onInputChange} value={title} />
+        <input autoFocus type="text" onChange={onInputChange} value={title} />
       </form>
-    </Container>
+    </Page>
   );
 };
 
-const mutation = gql`
-  mutation AddSong($title: String) {
-    addSong(title: $title) {
-      id
-      title
-    }
-  }
-`;
-
-const Container = styled.div`
-  background-color: whitesmoke;
-  height: 100vh;
-  padding: 25;
-`;
-
-export default withRouter(graphql(mutation)(CreateSong));
+export default withRouter(graphql(addSong)(CreateSong));
