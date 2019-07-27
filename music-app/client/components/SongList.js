@@ -3,12 +3,11 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import fetchSongs from '../queries/fetchSongs';
+import { getSongs, deleteSong } from '../queries';
 import { Page, Icon } from '../styled';
 
 const SongList = props => {
   const onSongDelete = id => e => {
-    console.log(e);
     props.mutate({ variables: { id } }).then(() => props.data.refetch());
   };
 
@@ -58,12 +57,4 @@ const SongTitle = styled(Link)`
   }
 `;
 
-const mutation = gql`
-  mutation DeleteSong($id: ID) {
-    deleteSong(id: $id) {
-      id
-    }
-  }
-`;
-
-export default graphql(mutation)(graphql(fetchSongs)(SongList));
+export default graphql(deleteSong)(graphql(getSongs)(SongList));
