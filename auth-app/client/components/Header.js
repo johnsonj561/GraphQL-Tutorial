@@ -10,7 +10,6 @@ const Header = props => {
   const isLoggedOut = !loading && !user;
   const isLoggedIn = !loading && !!user;
 
-  console.log(props);
   const onLogout = () => {
     props.mutate({
       refetchQueries: [{ query: getUser }],
@@ -44,7 +43,5 @@ const Header = props => {
 const Nav = styled.nav`
   padding: 0px 10px;
 `;
-
-const NavButton = styled.button``;
 
 export default graphql(logout)(graphql(getUser)(Header));
