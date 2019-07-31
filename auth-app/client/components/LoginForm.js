@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { graphql } from 'react-apollo';
 import AuthForm from './AuthForm';
 import { login } from '../mutations';
 import { getUser } from '../queries';
+import useLoginRedirect from '../hooks/useLoginRedirect';
 
 const LoginForm = props => {
   const [errors, setErrors] = useState([]);
+
+  useLoginRedirect(props);
+
   const onSubmit = (email, password) => {
     setErrors([]);
     props
@@ -18,6 +22,7 @@ const LoginForm = props => {
         setErrors(errors);
       });
   };
+
   return (
     <div className="container">
       <h3>Login</h3>
@@ -26,4 +31,4 @@ const LoginForm = props => {
   );
 };
 
-export default graphql(login)(LoginForm);
+export default graphql(getUser)(graphql(login)(LoginForm));

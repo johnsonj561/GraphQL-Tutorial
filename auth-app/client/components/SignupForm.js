@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { graphql } from 'react-apollo';
 import AuthForm from './AuthForm';
 import { signup } from '../mutations';
 import { getUser } from '../queries';
+import useLoginRedirect from '../hooks/useLoginRedirect';
 
 const SignupForm = props => {
   const [errors, setErrors] = useState([]);
+
+  useLoginRedirect(props);
 
   const onSubmit = (email, password) => {
     setErrors([]);
@@ -28,4 +31,4 @@ const SignupForm = props => {
   );
 };
 
-export default graphql(signup)(SignupForm);
+export default graphql(getUser)(graphql(signup)(SignupForm));
