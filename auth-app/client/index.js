@@ -8,6 +8,7 @@ import { HttpLink } from 'apollo-link-http';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import Header from './components/Header';
+import Dashboard from './components/Dashboard';
 
 const cache = new InMemoryCache();
 const uri = 'http://localhost:4000/graphql';
@@ -19,6 +20,7 @@ const Root = () => (
     <HashRouter>
       <Header />
       <Switch>
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/login" component={LoginForm} />
         <Route exact path="/signup" component={SignupForm} />
         <Redirect from="*" to="/" />
